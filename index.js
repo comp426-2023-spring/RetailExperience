@@ -27,6 +27,21 @@ app.post('/api/profile/', (req, res, next) => {
     console.log('User created.');
 });
 
+//Login endpoint 
+app.post('/api/login', (req, res, next) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let sql = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+    let user = db.prepare(sql).get();
+    if (user) {
+        res.send('Login successful!');
+        console.log('Login successful!');
+    } else {
+        res.status(401).send('Invalid username or password');
+        console.log('Login failed');
+    }
+});
+
 app.listen(port, () => {
     console.log("Server listening on port 5005")
 })
