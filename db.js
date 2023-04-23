@@ -15,7 +15,7 @@ if (users === undefined) {
             username TEXT, 
             password TEXT);`).run();
         
-        db.prepare(`INSERT INTO users (fname, lname, username, password) VALUES ('admin', 'admin_fname', 'admin_lname', 'admin_pass');`).run();
+        db.prepare(`INSERT INTO users (fname, lname, username, password) VALUES ('admin_fname', 'admin_lname', 'admin', 'admin_pass');`).run();
 
     } catch (error) {
         console.log(error);
@@ -67,6 +67,29 @@ if (interactions === undefined) {
 }
 else {
     console.log('Interactions info table exists.');
+}
+
+const checkouts_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='checkouts';`);
+
+const checkouts = checkouts_db.get();
+
+if (checkouts === undefined) {
+    try {
+        db.prepare(`CREATE TABLE checkouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            date DATETIME,
+            cost INTEGER,
+            FOREIGN KEY (user_id) REFERENCES users(id));`).run();
+
+        db.prepare(`INSERT INTO checkouts (user_id, date, cost) VALUES (1, '2023-04-18 00:00:00', 100);`).run();
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+else {
+    console.log('Checkouts info table exists.');
 }
 
 export default db;
