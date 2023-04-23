@@ -29,17 +29,25 @@ app.post('/api/profile/', (req, res, next) => {
         username: req.body.username,
         password: req.body.password
     }
-    let sql = `INSERT INTO users (fname, lname, username, password) VALUES ('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}');`;
-    db.prepare(sql).run();
-   
-    req.session.loggedin = true;
-    req.session.username = userdata.username;
-    req.session.products = {};
-    res.render('products');
-    console.log('Logged in.');
 
-    console.log('User created.');
-    res.end();
+    let sql = `SELECT COUNT(*) as count FROM users WHERE username = '${userdata.username}'`;
+    let result = db.prepare(sql).get();
+
+    if (result.count > 0) {
+        res.status(400).send('Username already exists');
+    } else {
+        sql = `INSERT INTO users(fname, lname, username, password) VALUES('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}');`;
+        db.prepare(sql).run();
+
+        req.session.loggedin = true;
+        req.session.username = userdata.username;
+        req.session.products = {};
+        res.render('products');
+        console.log('Logged in.');
+
+        console.log('User created.');
+        res.end();
+    }
 });
 
 app.post('/api/login/', (req, res, next) => {
@@ -51,11 +59,10 @@ app.post('/api/login/', (req, res, next) => {
     if (user) {
         req.session.loggedin = true;
         req.session.username = username;
+        req.session.products = {};
         res.render('products');
-        console.log('Logged in.');
     } else {
         res.status(401).send('Invalid username or password.');
-        console.log('Login failed.');
     }
     res.end();
 });
@@ -69,8 +76,7 @@ app.get('/api/account/', (req, res, next) => {
         );
         console.log('Account page rendered.');
     } else {
-        res.send('Please login to view this page!');
-        console.log('Please login to view this page!');
+        res.status(200).render('home');
     }
     res.end();
 });
@@ -92,14 +98,60 @@ app.post('/api/update/', (req, res, next) => {
         req.session.username = userdata.username;
 
         res.send('User updated.');
-        console.log('User updated.');
     } else {
-        res.send('Please login to view this page!');
-        console.log('Please login to view this page!');
+        res.status(200).render('home');
     }
     res.end();
 });
 
+app.post('/api/update_password/', (req, res, next) => {
+    let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
+    let user = db.prepare(get_sql).get();
+
+    if (req.session.loggedin) {
+        let userdata = {
+            fname: user.fname,
+            lname: user.lname,
+            username: user.username,
+            password: req.body.new_password,
+        }
+
+        if (req.body.password == user.password) {
+            let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
+            db.prepare(sql).run();
+            res.send('Password updated.');
+        } else {
+            res.send('Incorrect password.');
+        }
+    } else {
+        res.status(200).render('home');
+    }
+
+    res.end();
+});
+
+app.post('/api/delete_account/', (req, res, next) => {
+    let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
+    let user = db.prepare(get_sql).get();
+
+    if (req.session.loggedin) {
+        if (req.body.password == user.password) {
+            let sql = `DELETE FROM users WHERE username = '${req.session.username}';`;
+            db.prepare(sql).run();
+
+            req.session.loggedin = false;
+            req.session.username = null;
+            req.session.products = null;
+        } else {
+            res.send('Incorrect password.');
+        }
+    } else {
+        res.status(200).render('home');
+    }
+
+    res.end();
+});
+    
 app.listen(port, () => {
     console.log("Server listening on port 5005")
 })
