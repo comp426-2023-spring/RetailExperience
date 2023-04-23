@@ -29,17 +29,25 @@ app.post('/api/profile/', (req, res, next) => {
         username: req.body.username,
         password: req.body.password
     }
-    let sql = `INSERT INTO users (fname, lname, username, password) VALUES ('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}');`;
-    db.prepare(sql).run();
-   
-    req.session.loggedin = true;
-    req.session.username = userdata.username;
-    req.session.products = {};
-    res.render('products');
-    console.log('Logged in.');
 
-    console.log('User created.');
-    res.end();
+    let sql = `SELECT COUNT(*) as count FROM users WHERE username = '${userdata.username}'`;
+    let result = db.prepare(sql).get();
+
+    if (result.count > 0) {
+        res.status(400).send('Username already exists');
+    } else {
+        sql = `INSERT INTO users(fname, lname, username, password) VALUES('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}')`;;
+        db.prepare(sql).run();
+
+        req.session.loggedin = true;
+        req.session.username = userdata.username;
+        req.session.products = {};
+        res.render('products');
+        console.log('Logged in.');
+
+        console.log('User created.');
+        res.end();
+    }
 });
 
 app.post('/api/login/', (req, res, next) => {
