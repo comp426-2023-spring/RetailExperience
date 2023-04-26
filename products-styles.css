@@ -17,12 +17,17 @@ footer {
 }
 
 img {
-
+    margin: auto;
+    display: block;
     background-size: 100% 100% !important;
     width: 200px !important;
     height: 200px !important;
 }
 
 p {
+    font-family:  'Playfair Display';
+}
+
+button {
     font-family:  'Playfair Display';
 }

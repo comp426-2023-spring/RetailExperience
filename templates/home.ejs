@@ -7,7 +7,7 @@
 
         <h1 class="center">Create an Account</h1>
 
-        <form name="signup_form" action="http://localhost:5005/api/profile" method="post">
+        <form name="signup_form" action="api/profile" method="post">
 
             <label for="username">Username</label>
             <input type="text" name="username" class="field" required>
@@ -33,15 +33,13 @@
 
         <h1 class="center">Log In</h1>
 
-        <form name="login_form" action="http://localhost:5005/api/login" method="post"> 
+        <form name="login_form" action="/api/login" method="post"> 
 
             <label for="username">Username</label>
             <input type="text" name="username" class="field" required>
 
             <label for="password">Password</label>
             <input type="password" name="password" class="field" required>
-
-            <p class="error error--hidden"></p>
 
             <input type="submit" value="Log In" class="btn">
 
