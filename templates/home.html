@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1" >
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login & SignUp</title>
+    <link rel="stylesheet" href="home-style.css"> 
+</head>
+
+<body>
+    <div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header>LOGIN</header>
+            <form name="login_form" action="http://localhost:5005/api/login" method="post">
+                <input type="text" name="username" placeholder="Enter your username" required>
+                <input type="password" name="password" placeholder="Enter your password" required>
+                <p class="error error--hidden"></p>
+                <input type="button" class="button" value ="Login" >
+            </form>
+            <div class="register">
+                <span class="register"> Don't have an account?
+                    <label for="check">Signup!</label>
+                </span>
+            </div>
+        </div>
+        <div class="signup form">
+            <header>Create an Account</header>
+            <form name="signup_form" action="http://localhost:5005/api/profile" method="post">
+
+                <input type="text" name="fname" placeholder="Enter your first name" required>
+                
+     
+                <input type="text" name="lname" placeholder="Enter your last name" required>
+
+
+                <input type="text" name="username" placeholder="Create a username" required>
+
+
+                <input type="password" name="password" placeholder="Create a password" required>
+
+                <p class="error error--hidden"></p>
+
+                <input type="button" class="button" value ="Sign Up">
+            </form>
+
+            <div class="register">
+                <span class="register"> Already have an account?
+                    <label for="check">Login</label>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
