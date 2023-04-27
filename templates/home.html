@@ -13,11 +13,11 @@
         <input type="checkbox" id="check">
         <div class="login form">
             <header>LOGIN</header>
-            <form name="login_form" action="http://localhost:5005/api/login" method="post">
+            <form name="login_form" action="/api/login" method="post">
                 <input type="text" name="username" placeholder="Enter your username" required>
                 <input type="password" name="password" placeholder="Enter your password" required>
                 <p class="error error--hidden"></p>
-                <input type="button" class="button" value ="Login" >
+                <input type="submit" class="button" value ="Login" >
             </form>
             <div class="register">
                 <span class="register"> Don't have an account?
@@ -27,7 +27,7 @@
         </div>
         <div class="signup form">
             <header>Create an Account</header>
-            <form name="signup_form" action="http://localhost:5005/api/profile" method="post">
+            <form name="signup_form" action="/api/profile" method="post">
 
                 <input type="text" name="fname" placeholder="Enter your first name" required>
                 
@@ -42,7 +42,7 @@
 
                 <p class="error error--hidden"></p>
 
-                <input type="button" class="button" value ="Sign Up">
+                <input type="submit" class="button" value ="Sign Up">
             </form>
 
             <div class="register">
