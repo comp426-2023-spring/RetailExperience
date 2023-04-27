@@ -50,6 +50,8 @@ app.post('/api/profile/', (req, res, next) => {
     }
 });
 
+
+// Login endpoint
 app.post('/api/login/', (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
@@ -67,6 +69,8 @@ app.post('/api/login/', (req, res, next) => {
     res.end();
 });
 
+
+// View account details endpoint
 app.get('/api/account/', (req, res, next) => {
     if (req.session.loggedin) {
         let sql = `SELECT username, fname, lname FROM users WHERE username = '${req.session.username}';`;
@@ -81,6 +85,8 @@ app.get('/api/account/', (req, res, next) => {
     res.end();
 });
 
+
+// Edit profile endpoint
 app.post('/api/update/', (req, res, next) => {
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
@@ -104,6 +110,8 @@ app.post('/api/update/', (req, res, next) => {
     res.end();
 });
 
+
+// update password endpoint
 app.post('/api/update_password/', (req, res, next) => {
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
@@ -130,6 +138,8 @@ app.post('/api/update_password/', (req, res, next) => {
     res.end();
 });
 
+
+// Delete account endpoint
 app.post('/api/delete_account/', (req, res, next) => {
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
