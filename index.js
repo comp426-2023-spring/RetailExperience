@@ -178,7 +178,10 @@ app.post('/api/add_to_cart/', (req, res, next) => {
         let sql = `SELECT * FROM products WHERE id = '${req.body.id}';`;
         let product = db.prepare(sql).get();
 
-        if (req.session.products[product.id]) {
+        if (req.session.products[product.id]) {}
+
+    }
+});
             
     
 app.listen(port, () => {
