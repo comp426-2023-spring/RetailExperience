@@ -161,6 +161,25 @@ app.post('/api/delete_account/', (req, res, next) => {
 
     res.end();
 });
+
+// Add Products to Cart
+app.post('/api/add_to_cart/', (req, res, next) => {
+    let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
+    let user = db.prepare(get_sql).get();
+
+    if (req.session.loggedin) {
+        let userdata = {
+            fname: user.fname,
+            lname: user.lname,
+            username: user.username,
+            password: user.password,
+        }
+
+        let sql = `SELECT * FROM products WHERE id = '${req.body.id}';`;
+        let product = db.prepare(sql).get();
+
+        if (req.session.products[product.id]) {
+            
     
 app.listen(port, () => {
     console.log("Server listening on port 5005")
