@@ -153,13 +153,20 @@ app.post('/api/delete_account/', (req, res, next) => {
 });
 
 app.post('/api/buy/', (req, res, next) => {
-    let sql = `SELECT quantity FROM products WHERE id = '${req.session.id}';`;
+    let sql = `SELECT quantity FROM products WHERE id = '${req.session.products.id}';`;
     let quantity = db.prepare(sql).get();
 
     if (quantity > 0) {
         quantity = quantity - 1;
-        let sql2 = `UPDATE products SET quantity = '${quantity}' WHERE id = '${req.session.id}';`;
+        let sql2 = `UPDATE products SET quantity = '${quantity}' WHERE id = '${req.session.products.id}';`;
         db.prepare(sql2).run();
+        let sql3 = `SELECT price FROM products WHERE id = '${req.session.products.id}';`;
+        let cost = db.prepare(sql3).get();
+        let sql4 = `SELECT cost FROM checkouts WHERE user_id = '${req.session.user.id}';`;
+        let total = db.prepare(sql4).get();
+        total += cost;
+        let sql5 = `UPDATE checkouts SET cost = '${total}' WHERE id = '${req.session.user.id}';`;
+        db.prepare(sql5).run();
     }
     else {
         res.send('No more product.');
