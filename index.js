@@ -157,9 +157,10 @@ app.post('/api/buy/', (req, res, next) => {
     let quantity = db.prepare(sql).get();
 
     if (quantity > 0) {
-        quantity = quantity - 1;
-        let sql2 = `UPDATE products SET quantity = '${quantity}' WHERE id = '${req.session.products.id}';`;
-        db.prepare(sql2).run();
+        // update quantity after checkout
+        // quantity = quantity - 1;
+        // let sql2 = `UPDATE products SET quantity = '${quantity}' WHERE id = '${req.session.products.id}';`;
+        // db.prepare(sql2).run();
         let sql3 = `SELECT price FROM products WHERE id = '${req.session.products.id}';`;
         let cost = db.prepare(sql3).get();
         let sql4 = `SELECT cost FROM checkouts WHERE user_id = '${req.session.user.id}';`;
