@@ -151,6 +151,21 @@ app.post('/api/delete_account/', (req, res, next) => {
 
     res.end();
 });
+
+app.post('/api/buy/', (req, res, next) => {
+    let sql = `SELECT quantity FROM products WHERE id = '${req.session.id}';`;
+    let quantity = db.prepare(sql).get();
+
+    if (quantity > 0) {
+        quantity = quantity - 1;
+        let sql2 = `UPDATE products SET quantity = '${quantity}' WHERE id = '${req.session.id}';`;
+        db.prepare(sql2).run();
+    }
+    else {
+        res.send('No more product.');
+    }
+    res.end();
+});
     
 app.listen(port, () => {
     console.log("Server listening on port 5005")
