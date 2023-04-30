@@ -19,7 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 var port = 5005
 
 app.get('/', (req, res, next) => {
-    res.status(200).render('home') // send login page html file
+    if (req.session !== null && req.session.loggedin) {
+        res.render('products', { "products": req.session.available_products }); // send products page html file if person is already logged in
+    } else {
+        res.status(200).render('home') // send login page html file
+    }
 })
 
 // Create user endpoint
@@ -40,13 +44,27 @@ app.post('/api/profile/', (req, res, next) => {
         sql = `INSERT INTO users(fname, lname, username, password) VALUES('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}');`;
         db.prepare(sql).run();
 
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+
+        let id = db.prepare(`SELECT id FROM users WHERE username = '${userdata.username}';`).get().id;
+
+        sql = `INSERT INTO interactions (user_id, date, action) VALUES ('${id}', '${dateTime}', 'created account');`;
+        db.prepare(sql).run();
+
         req.session.loggedin = true;
         req.session.username = userdata.username;
-        req.session.products = {};
-        res.render('products');
-        console.log('Logged in.');
+        req.session.available_products = [];
+        req.session.cart = [];
 
-        console.log('User created.');
+        let sql_get_all_products = `SELECT * FROM products;`;
+        let products = db.prepare(sql_get_all_products).all();
+        req.session.available_products = products;
+
+        res.render('products', { "products": req.session.available_products });
+
         res.end();
     }
 });
@@ -60,10 +78,26 @@ app.post('/api/login/', (req, res, next) => {
     let user = db.prepare(sql).get();
 
     if (user) {
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+
+        let id = db.prepare(`SELECT id FROM users WHERE username = '${username}';`).get().id;
+
+        sql = `INSERT INTO interactions (user_id, date, action) VALUES ('${id}', '${dateTime}', 'logged in');`;
+        db.prepare(sql).run();
+
         req.session.loggedin = true;
         req.session.username = username;
-        req.session.products = {};
-        res.render('products');
+        req.session.available_products = [];
+        req.session.cart = [];
+
+        let sql_get_all_products = `SELECT * FROM products;`;
+        let products = db.prepare(sql_get_all_products).all();
+        req.session.available_products = products;
+
+        res.render('products', { "products": req.session.available_products });
     } else {
         res.status(401).send('Invalid username or password.');
     }
@@ -79,7 +113,6 @@ app.get('/api/account/', (req, res, next) => {
         res.render('account', 
             {"username": user.username, "fname": user.fname, "lname": user.lname}
         );
-        console.log('Account page rendered.');
     } else {
         res.status(200).render('home');
     }
@@ -93,18 +126,40 @@ app.post('/api/update/', (req, res, next) => {
     let user = db.prepare(get_sql).get();
 
     if (req.session.loggedin) {
+        if (req.body.username !== req.session.username) {
+            let sql = `SELECT COUNT(*) as count FROM users WHERE username = '${req.body.username}'`;
+            let result = db.prepare(sql).get();
+
+            if (result.count > 0) {
+                res.status(400).send('Username already exists');
+                res.end();
+                return;
+            }
+        }
+
         let userdata = {
             fname: req.body.fname,
             lname: req.body.lname,
             username: req.body.username,
             password: user.password,
         }
+
         let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
+        db.prepare(sql).run();
+
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+
+        let id = db.prepare(`SELECT id FROM users WHERE username = '${userdata.username}';`).get().id;
+
+        sql = `INSERT INTO interactions (user_id, date, action) VALUES ('${id}', '${dateTime}', 'updated account');`;
         db.prepare(sql).run();
 
         req.session.username = userdata.username;
 
-        res.send('User updated.');
+        res.redirect('/api/account');
     } else {
         res.status(200).render('home');
     }
@@ -128,7 +183,18 @@ app.post('/api/update_password/', (req, res, next) => {
         if (req.body.password == user.password) {
             let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
             db.prepare(sql).run();
-            res.send('Password updated.');
+            
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date + ' ' + time;
+
+            let id = db.prepare(`SELECT id FROM users WHERE username = '${userdata.username}';`).get().id;
+
+            sql = `INSERT INTO interactions (user_id, date, action) VALUES ('${id}', '${dateTime}', 'changed password');`;
+            db.prepare(sql).run();
+
+            res.redirect('/api/account');
         } else {
             res.send('Incorrect password.');
         }
@@ -150,9 +216,8 @@ app.post('/api/delete_account/', (req, res, next) => {
             let sql = `DELETE FROM users WHERE username = '${req.session.username}';`;
             db.prepare(sql).run();
 
-            req.session.loggedin = false;
-            req.session.username = null;
-            req.session.products = null;
+            req.session.destroy();
+            res.redirect('/');
         } else {
             res.send('Incorrect password.');
         }
@@ -163,27 +228,29 @@ app.post('/api/delete_account/', (req, res, next) => {
     res.end();
 });
 
-// Add Products to Cart
-app.post('/api/add_to_cart/', (req, res, next) => {
-    let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
-    let user = db.prepare(get_sql).get();
-
+app.post('/api/buy/', (req, res, next) => {
     if (req.session.loggedin) {
-        let userdata = {
-            fname: user.fname,
-            lname: user.lname,
-            username: user.username,
-            password: user.password,
+        for (let i = 0; i < req.session.cart.length; i++) {
+            if (req.session.cart[i].id == req.body.id) {
+                req.session.cart[i].quantity = req.body.quantity;
+                res.render('products', { "products": req.session.available_products });
+                res.end();
+                return;
+            }
         }
 
-        let sql = `SELECT * FROM products WHERE id = '${req.body.id}';`;
-        let product = db.prepare(sql).get();
-
-        if (req.session.products[product.id]) {}
-
+        req.session.cart.push({id: req.body.id, name:req.body.name, quantity: req.body.quantity, price: req.body.price});
+        res.render('products', { "products": req.session.available_products });
+    }
+    else {
+        res.status(200).render('home');
     }
 });
-            
+
+app.get('/api/logout/', (req, res, next) => {
+    req.session.destroy()
+    res.redirect("/");
+});
     
 app.listen(port, () => {
     console.log("Server listening on port 5005")

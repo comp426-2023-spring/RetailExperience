@@ -31,3 +31,16 @@ p {
 button {
     font-family:  'Playfair Display';
 }
+
+.row-pad {
+    margin-bottom: 20px;
+}
+
+.pad {
+    margin-bottom: 50px;
+}
+
+.btn-outline-primary {
+    padding: 8px 20px;
+    margin-right: 5;
+}

@@ -3,6 +3,7 @@ import database from 'better-sqlite3';
 const db = new database('RetailExperience.db');
 
 const users_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='users';`);
+db.prepare(`PRAGMA foreign_keys = ON;`).run();
 
 const users = users_db.get();
 
@@ -37,7 +38,10 @@ if (products === undefined) {
             price INTEGER,
             quantity INTEGER);`).run();
 
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('product1', 100, 10);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hat', 100, 10);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Shirt', 20, 5);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hoodie', 50, 10);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Pant', 60, 5);`).run();
 
     } catch (error) {
         console.log(error);
@@ -57,9 +61,10 @@ if (interactions === undefined) {
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             user_id INTEGER,
             date DATETIME,
-            FOREIGN KEY (user_id) REFERENCES users(id));`).run();
+            action TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
         
-        db.prepare(`INSERT INTO interactions (user_id, date) VALUES (1, '2023-04-18 00:00:00');`).run();
+        db.prepare(`INSERT INTO interactions (user_id, date, action) VALUES (1, '2023-04-18 00:00:00', 'created account');`).run();
 
     } catch (error) {
         console.log(error);
@@ -80,7 +85,7 @@ if (checkouts === undefined) {
             user_id INTEGER,
             date DATETIME,
             cost INTEGER,
-            FOREIGN KEY (user_id) REFERENCES users(id));`).run();
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
 
         db.prepare(`INSERT INTO checkouts (user_id, date, cost) VALUES (1, '2023-04-18 00:00:00', 100);`).run();
 
