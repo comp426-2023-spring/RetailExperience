@@ -14,7 +14,7 @@
                 <form name="user_form" action="/api/account" method="post">
 
                     <label for="fname">First Name</label>
-                    <input type="text" required name="fname"  value = <%= fname %> >
+                    <input type="text" required name="fname"  value = <%= fname %>>
 
                     <label for="lname">Last Name</label>
                     <input type="text" required name="lname" value = <%= lname %> >
@@ -22,6 +22,10 @@
                     <label for="username">Username</label>
                     <input type="text" required name="username" value = <%= username %> >
 
+                    <input type="submit" value="Update Info" class="button">
+                    <p class="error error--hidden"></p>
+                </form> 
+                <form name="change-password" action="/api/changepassword" method="post">
                     <h2>Update your password</h2>
 
                     <label for="password">Current Password</label>
@@ -33,11 +37,14 @@
                     <label for="password">Confirm new password</label>
                     <input type="password" name="new password" placeholder="Re-enter new password" required>
 
-                    <input type="button" value="Update Info" class="button">
+                    <input type="submit" value="Change Password" class="button">
 
-                    <p class="error error--hidden"></p>
+
                 </form>
                 
+                <form name="delete-account" action="/api/deleteaccount" method="post">
+                    <input type="submit" value="Delete Account" class="button">
+                </form>
             </div>
 
         </div>
