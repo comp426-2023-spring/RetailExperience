@@ -22,9 +22,6 @@ if (users === undefined) {
         console.log(error);
     }
 }
-else {
-    console.log('User info table exists.');
-}
 
 const products_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='products';`);
 
@@ -47,9 +44,6 @@ if (products === undefined) {
         console.log(error);
     }
 }
-else {
-    console.log('Products info table exists.');
-}
 
 const interations_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='interactions';`);
 
@@ -70,9 +64,6 @@ if (interactions === undefined) {
         console.log(error);
     }
 }
-else {
-    console.log('Interactions info table exists.');
-}
 
 const checkouts_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='checkouts';`);
 
@@ -92,9 +83,6 @@ if (checkouts === undefined) {
     } catch (error) {
         console.log(error);
     }
-}
-else {
-    console.log('Checkouts info table exists.');
 }
 
 export default db;

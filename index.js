@@ -20,7 +20,7 @@ var port = 5005
 
 app.get('/', (req, res, next) => {
     if (req.session !== null && req.session.loggedin) {
-        res.render('products', { "products": req.session.available_products }); // send products page html file if person is already logged in
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart }); // send products page html file if person is already logged in
     } else {
         res.status(200).render('home') // send login page html file
     }
@@ -63,7 +63,7 @@ app.post('/api/profile/', (req, res, next) => {
         let products = db.prepare(sql_get_all_products).all();
         req.session.available_products = products;
 
-        res.render('products', { "products": req.session.available_products });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
 
         res.end();
     }
@@ -97,7 +97,7 @@ app.post('/api/login/', (req, res, next) => {
         let products = db.prepare(sql_get_all_products).all();
         req.session.available_products = products;
 
-        res.render('products', { "products": req.session.available_products });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
     } else {
         res.status(401).send('Invalid username or password.');
     }
@@ -180,7 +180,7 @@ app.post('/api/update_password/', (req, res, next) => {
             password: req.body.new_password,
         }
 
-        if (req.body.password == user.password) {
+        if (req.body.password == user.password && req.body.new_password == req.body.confirm_password) {
             let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
             db.prepare(sql).run();
             
@@ -195,6 +195,8 @@ app.post('/api/update_password/', (req, res, next) => {
             db.prepare(sql).run();
 
             res.redirect('/api/account');
+        } else if (req.body.confirm_password != req.body.new_password) {
+            res.send("Passwords don't match.");
         } else {
             res.send('Incorrect password.');
         }
@@ -233,7 +235,7 @@ app.post('/api/buy/', (req, res, next) => {
         for (let i = 0; i < req.session.cart.length; i++) {
             if (req.session.cart[i].id == req.body.id) {
                 req.session.cart[i].quantity = req.body.quantity;
-                res.render('products', { "products": req.session.available_products });
+                res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
                 res.end();
                 return;
             }
@@ -247,11 +249,104 @@ app.post('/api/buy/', (req, res, next) => {
     }
 });
 
+app.post('/api/products/buy/:id', (req, res, next) => {
+    if (req.session.loggedin) {
+        //no items in cart
+        if (req.session.cart.length < 1) {
+            req.session.cart.push({ id: req.body.id, name: req.body.name, quantity: parseInt(req.body.quantity), price: req.body.price });
+        } else {
+
+            //increase quantity if the item is already present
+            console.log(req.session.cart);
+
+            let result = req.session.cart.find((e) => { return e.name === req.body.name });
+
+            if (result == undefined) {
+                req.session.cart.push({ id: req.body.id, name: req.body.name, quantity: parseInt(req.body.quantity), price: req.body.price });
+            } else { result.quantity += 1; }
+        }
+
+        console.log(`Added ${req.body.quantity} of product ${req.params.id} to cart.`)
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.end();
+    }
+    else {
+        res.status(200).render('home');
+    }
+});
+
+app.post('/api/products/remove/:id', (req, res, next) => {
+    if (req.session.loggedin) {
+        //remove from array if only one of the item
+        if (req.body.quantity <= 1) {
+            req.session.cart = req.session.cart.filter(function (e) { return e.name !== req.body.name })
+        } else {
+            let result = req.session.cart.find((e) => { return e.name === req.body.name });
+
+            if (result !== undefined) {
+                result.quantity -= 1;
+            }
+        }
+
+        console.log(`Removed ${req.body.quantity} of product ${req.params.id} to cart.`)
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.end();
+    }
+
+    else {
+        res.status(200).render('home');
+    }
+});
+
+app.post('/api/checkout/', (req, res, next) => {
+    res.render('checkout', { "cart": req.session.cart })
+    res.end();
+});
+
+//confirm purchase
+app.post('/api/confirm_purchase', (req, res, next) => {
+    //add interaction to checkout table
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
+    let userID = db.prepare(`SELECT id FROM users WHERE username = '${req.session.username}';`).get().id;
+    let checkQ = `INSERT INTO checkouts (user_id, date, cost) VALUES ('${userID}', '${dateTime}', '${req.body.total}');`;
+    db.prepare(checkQ).run();
+
+    //decrement quantity of each item in product db
+    for (let i = 0; i < req.session.cart.length; i++) {
+        let itemId = req.session.cart[i]['id']
+        let purchaseQuantity = (req.session.cart[i]['quantity']);
+        let oldQuantity = (req.session.available_products[i]['quantity']);
+        let newQuantity = oldQuantity - purchaseQuantity
+        console.log(newQuantity);
+
+
+        let decrQ = `UPDATE products SET quantity = ${newQuantity} WHERE id='${itemId}';`;
+        db.prepare(decrQ).run();
+    }
+    //clear cart
+    let sql_get_all_products = `SELECT * FROM products;`;
+    let products = db.prepare(sql_get_all_products).all();
+    req.session.available_products = products;
+
+    req.session.cart = [];
+
+    //return home
+    res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'true' });
+    //display confirm message
+
+
+    res.end();
+});
+
 app.get('/api/logout/', (req, res, next) => {
     req.session.destroy()
     res.redirect("/");
 });
-    
+
 app.listen(port, () => {
-    console.log("Server listening on port 5005")
+    console.log("Server listening on port 3000")
 })

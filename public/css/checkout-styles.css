@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Work+Sans:wght@300&display=swap');
+
+header {
+    font-family: 'Playfair Display';
+    background-color: black;
+    color: white;
+}
+
+.body {
+    display: flex;
+}
+
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-family: 'Playfair Display';
+    background-color: black;
+    color: white;
+}
+
+img {
+    margin: auto;
+    display: block;
+    background-size: 100% 100% !important;
+    width: 200px !important;
+    height: 200px !important;
+}
+
+
+
+p {
+    font-family: 'Playfair Display';
+}
+
+h2 {
+    font-family: 'Playfair Display';
+}
+
+button {
+    font-family: 'Playfair Display';
+}
+
+.row-pad {
+    margin-bottom: 20px;
+}
+
+.pad {
+    margin-bottom: 50px;
+}
+
+.btn-outline-primary {
+    padding: 8px 20px;
+    margin-right: 5;
+}
+
+.nav-buttons {
+    flex-direction: row;
+    background-color: green;
+}
+
+.main {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: red;
+    margin: 1em;
+    width: 60%;
+}
+
+.item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 90%;
+    background-color: yellow;
+}
+
+.item {
+    background-color: blue;
+}
+
+.item-image-container {
+    width: 50%;
+    background-color: green;
+}
+
+.item-image {}

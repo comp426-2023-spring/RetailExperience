@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-    <div>
-        <h2>Update Your Infomation</h2>
 
-        <div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Account</title>
+    <link rel="stylesheet" href="/css/account-style.css">
+
+<body>
+    <div class="container">
+        <div class="Account form">
+            <header>MY ACCOUNT</header>
             <form name="update_form" action="/api/update" method="post">
-            
-                <label for="username">Username</label>
-                <input type="text" name="username" class="field" value = <%= username %> required>
-            
+
                 <label for="fname">First Name</label>
-                <input type="text" name="fname" class="field" value = <%= fname %> required>
-            
+                <input type="text" required name="fname" value=<%=fname %>>
+
                 <label for="lname">Last Name</label>
-                <input type="text" name="lname" class="field" value = <%= lname %> required>
-                        
-                <input type="submit" value="Update Data" class="btn">
-            
+                <input type="text" required name="lname" value=<%=lname %> >
+
+                <label for="username">Username</label>
+                <input type="text" required name="username" value=<%=username %> >
+
+                <input type="submit" value="Update Info" class="button">
+                <p class="error error--hidden"></p>
             </form>
-        </div>
-    </div>
 
-    <div>
-        <h2>Update Your Password</h2>
+            <form name="update_password" action="/api/update_password" method="post">
+                <h2>Update your password</h2>
 
-        <div>
-            <form name = "update_password" action = "/api/update_password" method="post">
                 <label for="password">Current Password</label>
-                <input type="password" name="password" class="field" required>
+                <input type="password" name="password" placeholder="Enter current password" required>
 
-                <label for="new_password">New Password</label>
-                <input type="password" name="new_password" class="field" required>
+                <label for="password">New Password</label>
+                <input type="password" name="new_password" placeholder="Enter new password" required>
 
-                <input type="submit" value="Update Password" class="btn">
+                <label for="password">Confirm new password</label>
+                <input type="password" name="confirm_password" placeholder="Re-enter new password" required>
 
+                <input type="submit" value="Change Password" class="button">
+            </form>
+
+            <form name="delete-account" action="/api/delete_account" method="post">
+                <h2>Delete Account</h2>
+                <input type="password" name="password" placeholder="Confirm Password for Deletion" required>
+            
+                <input type="submit" value="Delete" class="button">
             </form>
         </div>
+
     </div>
 
-    <div>
-        <h2>Delete Account</h2>
 
-        <div>
-            <form action="delete_account" action = "/api/delete_account" method="post">
-                <label for="password">Confirm Password for Deletion</label>
-                <input type="password" name="password" class="field" required>
-
-                <input type="submit" value="Delete Account" class="btn">
-            </form>
-        </div>
-    </div>
-</html>
+</body>
