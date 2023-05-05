@@ -24,3 +24,4 @@
 * created endpoints for shopping cart
 
 # May 6th meeting:
+* making documentations
