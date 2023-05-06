@@ -76,9 +76,10 @@ if (checkouts === undefined) {
             user_id INTEGER,
             date DATETIME,
             cost INTEGER,
+            email TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
 
-        db.prepare(`INSERT INTO checkouts (user_id, date, cost) VALUES (1, '2023-04-18 00:00:00', 100);`).run();
+        db.prepare(`INSERT INTO checkouts (user_id, date, cost, email) VALUES (1, '2023-04-18 00:00:00', 100, 'test@gmail.com');`).run();
 
     } catch (error) {
         console.log(error);

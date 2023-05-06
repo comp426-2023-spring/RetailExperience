@@ -16,7 +16,11 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+<<<<<<< Updated upstream
 var port = 3000;
+=======
+var port = 3000
+>>>>>>> Stashed changes
 
 app.get('/', (req, res, next) => {
     if (req.session !== null && req.session.loggedin) {
@@ -262,6 +266,16 @@ app.post('/api/buy/', (req, res, next) => {
     }
 });
 
+app.post('/api/products/', (req, res, next) => {
+    if (req.session.loggedin) {
+        
+        res.render('products', { "products": req.session.available_products });
+    }
+    else {
+        res.status(200).render('home');
+    }
+});
+
 app.post('/api/products/buy/:id', (req, res, next) => {
     if (req.session.loggedin) {
         //no items in cart
@@ -308,7 +322,7 @@ app.post('/api/products/remove/:id', (req, res, next) => {
 });
 
 app.post('/api/checkout/', (req, res, next) => {
-    res.render('checkout', { "cart": req.session.cart })
+    res.render('checkout', { "cart": req.session.cart, "total": req.body.total })
     res.end();
 });
 
@@ -321,7 +335,7 @@ app.post('/api/confirm_purchase', (req, res, next) => {
     var dateTime = date + ' ' + time;
 
     let userID = db.prepare(`SELECT id FROM users WHERE username = '${req.session.username}';`).get().id;
-    let checkQ = `INSERT INTO checkouts (user_id, date, cost) VALUES ('${userID}', '${dateTime}', '${req.body.total}');`;
+    let checkQ = `INSERT INTO checkouts (user_id, date, cost, email) VALUES ('${userID}', '${dateTime}', '${req.body.total}', '${req.body.email}');`;
     db.prepare(checkQ).run();
 
     //decrement quantity of each item in product db
