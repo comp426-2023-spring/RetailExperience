@@ -54,11 +54,13 @@ button {
 .btn-outline-primary {
     padding: 8px 20px;
     margin-right: 5;
+    background-color: azure;
+
+    margin-left: 1em;
 }
 
 .nav-buttons {
     flex-direction: row;
-    background-color: green;
 }
 
 .cart-image {
@@ -103,16 +105,18 @@ button {
     width: 30%;
     height: fit-content;
     max-height: 50%;
-    background-color: lightblue;
+    background-color: rgb(153, 168, 255);
 
 }
 
 .cart-item-container {
     display: flex;
     flex-direction: row;
+    background-color: rgb(189, 189, 189);
 
     padding: 5%;
     margin-bottom: 5%;
+    border: 1px solid white;
     border-radius: .5em;
 }
 
@@ -120,21 +124,24 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    padding-left: .25em;
-
-    width: 30%;
+    align-items: flex-start;
+    padding-left: 5%;
+    width: 35%;
     color: black;
 }
 
+.cart-item-h {
+    font-size: 100%;
+}
+
 .cart-item-image-container {
-    width: 50%;
-    background-color: black;
+    width: 40%;
 }
 
 .cart-item-image {
     height: 100% !important;
     width: 100% !important;
+    border: 2px solid rgb(83, 83, 83);
 }
 
 .cart-item-count-container {
@@ -151,6 +158,15 @@ button {
     border: none;
     width: 20px;
     height: 20px;
+    border-radius: 100%;
+    padding: 5px;
+}
+
+.cart-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 3em;
 }
 
 .cart-checkout-box {
@@ -162,20 +178,62 @@ button {
     height: 5em;
 }
 
+.checkout-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .checkout-button {
     height: fit-content;
-    width: 100%;
+    width: 30%;
     border: none;
     border-radius: 2em;
 }
 
+.checkout-button:hover {
+    transition: .3s;
+    background-color: #444444;
+    color: white;
+}
+
 .purchase-message-box {
-    background-color: red;
-    display: none;
+    background-color: rgb(122, 142, 255);
+    flex-direction: column;
     position: fixed;
-    width: 20vw;
-    top: 50vh;
-    right: 40%;
+    width: 50%;
+    height: 30%;
+    border-radius: 1em;
+    top: 30%;
+    left: 25vw;
+}
+
+.show {
+    display: flex;
+}
+
+.hide {
+    display: none;
+}
+
+.message-bar {
+    display: flex;
+    padding: 1em;
+    justify-content: flex-end;
+}
+
+.message-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: aliceblue;
+
+    height: 100%;
+    padding-bottom: 1em;
+    background-color: rgb(56, 56, 56);
+    border-radius: 0 0 1em 1em;
+    box-shadow: 5px 5px 12px rgba(108, 162, 244, 0.466);
+
 }
 
 .cart-container::-webkit-scrollbar {

@@ -6,6 +6,10 @@ header {
     color: white;
 }
 
+body {
+    margin-bottom: 2em;
+}
+
 footer {
     position: fixed;
     left: 0;
@@ -74,32 +78,56 @@ button {
 .main-content {
     display: flex;
     flex-direction: column;
-    background-color: rgb(223, 223, 223);
+    width: 70%;
     margin: 1em;
-    width: 60%;
+    height: fit-content;
+    background-color: rgb(56, 81, 102);
+    color: white;
+
+    border-radius: 0 0 6px 6px;
+
 }
 
 .item-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    width: 90%;
+    width: 100%;
 }
 
 .item {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding-left: 1em;
+    padding-bottom: 1em;
+    margin-top: 1em;
+    margin-right: 1em;
 }
 
-.item-image-container {
-    width: 50%;
+.q {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
 }
 
 .item-image {
- 
-    margin: auto;
+
+    padding: 1em;
+    padding-bottom: 0;
     display: block;
     background-size: 100% 100% !important;
-    width: 200px !important;
-    height: 200px !important;
+    width: auto !important;
+    max-width: 250px;
+}
+
+.checkout-box {
+    justify-self: flex-end;
+    background-color: black;
+    color: aliceblue;
+    border-radius: 0 0 6px 6px;
+    padding: 1em;
+
 }
 
 
@@ -108,9 +136,12 @@ button {
 .user-info-container {
     margin-top: 1em;
     margin-bottom: 1em;
-    max-width: 600px;
+    margin-right: 1em;
     width: 100%;
-    background-color: gray;
+    max-width: 100%;
+    min-width: 300px;
+    max-height: 600px;
+    background-color: rgb(163, 163, 163);
     box-shadow: 0 5px 10px rgba(108, 162, 244, 0.466);
     border-radius: 6px;
 }
@@ -124,8 +155,10 @@ button {
     flex-direction: column;
     align-items: center;
 }
+
 .info-form header {
     text-align: center;
+    padding: .5em;
     margin-bottom: 1.5rem;
     font-size: 2.4rem;
     font-weight: 480;
@@ -137,7 +170,7 @@ button {
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
     font-weight: 100;
-    
+
 }
 
 .info-form input {
@@ -150,6 +183,7 @@ button {
     border: 1px solid #ddd;
     border-radius: 7px;
 }
+
 
 .info-form input.button {
     background-color: #bebebe;
@@ -167,5 +201,6 @@ button {
 }
 
 .info-form input.button:hover {
-    background-color: #9b9a9a;
+    background-color: #444444;
+    color: white;
 }

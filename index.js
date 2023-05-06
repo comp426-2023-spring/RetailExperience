@@ -27,7 +27,6 @@ app.get('/', (req, res, next) => {
 })
 
 // Create user endpoint
-
 app.post('/api/profile/', (req, res, next) => {
     let userdata = {
         fname: req.body.fname,
@@ -36,12 +35,14 @@ app.post('/api/profile/', (req, res, next) => {
         password: req.body.password
     }
 
+    // Check if username already exists
     let sql = `SELECT COUNT(*) as count FROM users WHERE username = '${userdata.username}'`;
     let result = db.prepare(sql).get();
 
     if (result.count > 0) {
         res.status(400).send('Username already exists');
     } else {
+        // Insert user into database
         sql = `INSERT INTO users(fname, lname, username, password) VALUES('${userdata.fname}', '${userdata.lname}', '${userdata.username}', '${userdata.password}');`;
         db.prepare(sql).run();
 
@@ -60,11 +61,12 @@ app.post('/api/profile/', (req, res, next) => {
         req.session.available_products = [];
         req.session.cart = [];
 
+        // Load product page upon successful signup
         let sql_get_all_products = `SELECT * FROM products;`;
         let products = db.prepare(sql_get_all_products).all();
         req.session.available_products = products;
 
-        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'hide' });
 
         res.end();
     }
@@ -80,6 +82,7 @@ app.post('/api/login/', (req, res, next) => {
     let user = db.prepare(sql).get();
 
     if (user) {
+        // Log interaction
         var today = new Date();
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -95,11 +98,12 @@ app.post('/api/login/', (req, res, next) => {
         req.session.available_products = [];
         req.session.cart = [];
 
+        // Load product page upon successful login
         let sql_get_all_products = `SELECT * FROM products;`;
         let products = db.prepare(sql_get_all_products).all();
         req.session.available_products = products;
 
-        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'hide' });
     } else {
         res.status(401).send('Invalid username or password.');
         
@@ -128,7 +132,7 @@ app.get('/api/products/', (req, res, next) => {
     if (req.session.loggedin) {
         let sql = `SELECT * FROM products;`;
         let products = db.prepare(sql).all();
-        res.render('products', { "products": products, "cart": req.session.cart });
+        res.render('products', { "products": products, "cart": req.session.cart, "purchase": 'hide' });
     } else {
         res.status(200).render('home');
     }
@@ -138,11 +142,12 @@ app.get('/api/products/', (req, res, next) => {
 
 // Edit profile endpoint
 app.post('/api/update/', (req, res, next) => {
+    // Get user data
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
 
     if (req.session.loggedin) {
-        if (req.body.username !== req.session.username) {
+        if (req.body.username !== req.session.username) { // Check if username was changed
             let sql = `SELECT COUNT(*) as count FROM users WHERE username = '${req.body.username}'`;
             let result = db.prepare(sql).get();
 
@@ -153,6 +158,7 @@ app.post('/api/update/', (req, res, next) => {
             }
         }
 
+        // Update user data
         let userdata = {
             fname: req.body.fname,
             lname: req.body.lname,
@@ -163,6 +169,7 @@ app.post('/api/update/', (req, res, next) => {
         let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
         db.prepare(sql).run();
 
+        // Log interaction
         var today = new Date();
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -185,6 +192,7 @@ app.post('/api/update/', (req, res, next) => {
 
 // update password endpoint
 app.post('/api/update_password/', (req, res, next) => {
+    // Get user data
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
 
@@ -196,10 +204,11 @@ app.post('/api/update_password/', (req, res, next) => {
             password: req.body.new_password,
         }
 
-        if (req.body.password == user.password && req.body.new_password == req.body.confirm_password) {
+        if (req.body.password == user.password && req.body.new_password == req.body.confirm_password) { // Check password and confirm password match
             let sql = `UPDATE users SET fname = '${userdata.fname}', lname = '${userdata.lname}', username = '${userdata.username}', password = '${userdata.password}' WHERE username = '${req.session.username}';`;
             db.prepare(sql).run();
             
+            // Log interaction
             var today = new Date();
             var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -211,9 +220,9 @@ app.post('/api/update_password/', (req, res, next) => {
             db.prepare(sql).run();
 
             res.redirect('/api/account');
-        } else if (req.body.confirm_password != req.body.new_password) {
+        } else if (req.body.confirm_password != req.body.new_password) { // If new password and confirm password don't match
             res.send("Passwords don't match.");
-        } else {
+        } else { // If password is incorrect
             res.send('Incorrect password.');
         }
     } else {
@@ -226,17 +235,19 @@ app.post('/api/update_password/', (req, res, next) => {
 
 // Delete account endpoint
 app.post('/api/delete_account/', (req, res, next) => {
+    // Get user data
     let get_sql = `SELECT username, fname, lname, password FROM users WHERE username = '${req.session.username}';`;
     let user = db.prepare(get_sql).get();
 
     if (req.session.loggedin) {
-        if (req.body.password == user.password) {
+        if (req.body.password == user.password) { // Check password
             let sql = `DELETE FROM users WHERE username = '${req.session.username}';`;
             db.prepare(sql).run();
 
+            // Erase session and redirect to home
             req.session.destroy();
             res.redirect('/');
-        } else {
+        } else { // If password is incorrect
             res.send('Incorrect password.');
         }
     } else {
@@ -244,35 +255,6 @@ app.post('/api/delete_account/', (req, res, next) => {
     }
 
     res.end();
-});
-
-app.post('/api/buy/', (req, res, next) => {
-    if (req.session.loggedin) {
-        for (let i = 0; i < req.session.cart.length; i++) {
-            if (req.session.cart[i].id == req.body.id) {
-                req.session.cart[i].quantity = req.body.quantity;
-                res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
-                res.end();
-                return;
-            }
-        }
-
-        req.session.cart.push({id: req.body.id, name:req.body.name, quantity: req.body.quantity, price: req.body.price});
-        res.render('products', { "products": req.session.available_products });
-    }
-    else {
-        res.status(200).render('home');
-    }
-});
-
-app.post('/api/products/', (req, res, next) => {
-    if (req.session.loggedin) {
-        
-        res.render('products', { "products": req.session.available_products });
-    }
-    else {
-        res.status(200).render('home');
-    }
 });
 
 app.post('/api/products/buy/:id', (req, res, next) => {
@@ -290,7 +272,7 @@ app.post('/api/products/buy/:id', (req, res, next) => {
             } else { result.quantity += 1; }
         }
 
-        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'hide' });
         res.end();
     }
     else {
@@ -311,7 +293,7 @@ app.post('/api/products/remove/:id', (req, res, next) => {
             }
         }
 
-        res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
+        res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'hide' });
         res.end();
     }
 
@@ -332,10 +314,18 @@ app.post('/api/confirm_purchase', (req, res, next) => {
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
+    var purchase = 'hide';
 
     let userID = db.prepare(`SELECT id FROM users WHERE username = '${req.session.username}';`).get().id;
-    let checkQ = `INSERT INTO checkouts (user_id, date, cost, email) VALUES ('${userID}', '${dateTime}', '${req.body.total}', '${req.body.email}');`;
+    let checkQ = `INSERT INTO checkouts (user_id, date, cost, email, phone, address) VALUES ('${userID}', '${dateTime}', '${req.body.total}', '${req.body.email}', '${req.body.phone}', '${req.body.address}');`;
     db.prepare(checkQ).run();
+
+    //if we are at this endpoint with an empty cart, it must be due to refreshing
+    //only show confirm purchase message if we reach this endpoint with items in cart
+    if (req.session.cart.length >= 1) {
+        console.log('empty');
+        purchase = 'show';
+    }
 
     //decrement quantity of each item in product db
     for (let i = 0; i < req.session.cart.length; i++) {
@@ -350,22 +340,24 @@ app.post('/api/confirm_purchase', (req, res, next) => {
     //clear cart
     let sql_get_all_products = `SELECT * FROM products;`;
     let products = db.prepare(sql_get_all_products).all();
+    let trans_id = db.prepare(`SELECT id, date FROM checkouts WHERE user_id='${userID}' ORDER BY date DESC LIMIT 1;`).all();
     req.session.available_products = products;
 
     req.session.cart = [];
 
     //return home
-    res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": 'true' });
-    //display confirm message
-
+    res.render('products', { "products": req.session.available_products, "cart": req.session.cart, "purchase": purchase, "trans_id": trans_id[0].id });
 
     res.end();
 });
 
+
+// Logout endpoint
 app.get('/api/logout/', (req, res, next) => {
     req.session.destroy()
     res.redirect("/");
 });
+
 
 app.listen(port, () => {
     console.log("Server listening on port 3000")
