@@ -32,7 +32,7 @@ if (products === undefined) {
         db.prepare(`CREATE TABLE products (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             name TEXT, 
-            price INTEGER,
+            price REAL,
             quantity INTEGER);`).run();
 
         db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hat', 20, 25);`).run();
@@ -75,11 +75,13 @@ if (checkouts === undefined) {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             date DATETIME,
-            cost INTEGER,
+            cost REAL,
             email TEXT,
+            phone decimal(10,0),
+            address TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
 
-        db.prepare(`INSERT INTO checkouts (user_id, date, cost, email) VALUES (1, '2023-04-18 00:00:00', 100, 'test@gmail.com');`).run();
+        db.prepare(`INSERT INTO checkouts (user_id, date, cost, email, phone, address) VALUES (1, '2023-04-18 00:00:00', 100, 'test@gmail.com', 1111111111, 'Test Address');`).run();
 
     } catch (error) {
         console.log(error);

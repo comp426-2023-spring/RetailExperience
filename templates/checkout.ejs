@@ -14,83 +14,80 @@
 </head>
 
 <body>
-    
 
     <header class="display-6 p-4">
-        
-        <div class="container" >
-            
-
+        <div class="container">
             <div class="row justify-content-between align-items-center">
-                
-                
-                <div class="col-md-6 text-md-start mx-auto">
+                <div class="col-md-6 text-md-start">
                     Checkout
                 </div>
-
-                <div class="col-sm-6 text-md-start mx-auto">
-
-                    <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/account'">Account
-                    </button>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/logout'">Logout
-                    </button>
-
+                <div class="col-md-6 text-md-end">
+                    <button type="button" class="btn btn-outline-primary"
+                        onclick="location.href='/api/account'">Account</button>
+                    <button type="button" class="btn btn-outline-primary"
+                        onclick="location.href='/api/logout'">Logout</button>
                 </div>
-
             </div>
         </div>
     </header>
+
 
     <div class="main">
         <div class="main-content">
 
             <% for (let i=0; i < cart.length; i++) { %>
-            <% var temp = "/img/" + cart[i]['name'] + ".jpg" ;%>
+                <% var temp="/img/" + cart[i]['name'] + ".jpg" ;%>
 
-            <div class="item-container">
-                <div class="item-image-container">
+                    <div class="item-container">
+                        <div class="item-image-container">
+                            <img class="item-image" src="<%= temp %>" alt="<%= cart[i]['name'] %>">
+                        </div>
+                        <div class="item">
+                            <h1>
+                                <%= cart[i]['name']%>
+                            </h1>
+                            <h3>$<%= cart[i]['price']%>
+                            </h3>
+                            <div class="q">Quantity: <%= cart[i]['quantity']%>
+                            </div>
+                        </div>
+                    </div>
 
-                    <img class="item-image" src="<%= temp %>" alt="<%= cart[i]['name'] %>">
-                </div>
-                <div class="item">
-                    <div><%= cart[i]['name']%></div>
-                    <div>$<%= cart[i]['price']%></div>
-                    <div><%= cart[i]['quantity']%></div>
-                </div>
-            </div>
+                    <% } %>
 
-            <% } %>
-
-            <div class="checkout-box">
-                <div>Total: $<%= total %></div>
-
-                
-            </div>
+                        <div class="checkout-box">
+                            <div>Total: $<%= total %>
+                            </div>
+                            <div>Items in Cart: <%= cart.length %>
+                            </div>
+                        </div>
         </div>
 
         <div class="user-info-container">
-            <div  class="info-form">
+            <div class="info-form">
                 <header>Contact Information</header>
                 <form name="update_form" action="/api/confirm_purchase" method="post">
-    
+
                     <label for="email">Email</label>
                     <input type="text" required name="email">
 
                     <label for="p">Phone Number</label>
                     <input type="text" required name="phone">
-    
-    
+
+
                     <label for="addr">Shipping Address</label>
                     <input type="text" required name="address">
-    
+
                     <input type="submit" value="Confirm" class="button">
                     <p class="error error--hidden"></p>
 
+
                     <input type="hidden" name="total" value="<%= total %>">
+
+
                 </form>
-              
-    
+
+
             </div>
         </div>
 

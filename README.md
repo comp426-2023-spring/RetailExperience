@@ -22,7 +22,10 @@ Retail Experience is an application that allows users to browse and purchase pro
 Insert Link Here
 
 ## API Endpoints
-Click this link to find out more about the applications enpoints: [API Endpoints](docs/api.md)
+Click this link to find out more about the applications enpoints: [API Endpoints](docs/api-endpoint.md)
+
+## Database Schema
+Click this link to find out more about the applications database schema: [Database Schema](docs/database-schema.md)
 
 <!---
 
