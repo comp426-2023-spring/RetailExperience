@@ -25,3 +25,9 @@
 
 # May 6th meeting:
 * making documentations
+* working on merging everything & dealing with merge conflicts
+
+# May 7th meeting:
+* finish documentations
+* make video 
+* finalize and submit
