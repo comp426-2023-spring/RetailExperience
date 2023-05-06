@@ -3,6 +3,7 @@ import database from 'better-sqlite3';
 const db = new database('RetailExperience.db');
 
 const users_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='users';`);
+db.prepare(`PRAGMA foreign_keys = ON;`).run();
 
 const users = users_db.get();
 
@@ -21,9 +22,6 @@ if (users === undefined) {
         console.log(error);
     }
 }
-else {
-    console.log('User info table exists.');
-}
 
 const products_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='products';`);
 
@@ -37,14 +35,14 @@ if (products === undefined) {
             price INTEGER,
             quantity INTEGER);`).run();
 
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('product1', 100, 10), ('product2', 200, 5), ('product1', 30, 0);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hat', 20, 25);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Shirt', 20, 50);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hoodie', 50, 40);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Socks', 10, 15);`).run();
 
     } catch (error) {
         console.log(error);
     }
-}
-else {
-    console.log('Products info table exists.');
 }
 
 const interations_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='interactions';`);
@@ -57,16 +55,14 @@ if (interactions === undefined) {
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             user_id INTEGER,
             date DATETIME,
-            FOREIGN KEY (user_id) REFERENCES users(id));`).run();
+            action TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
         
-        db.prepare(`INSERT INTO interactions (user_id, date) VALUES (1, '2023-04-18 00:00:00');`).run();
+        db.prepare(`INSERT INTO interactions (user_id, date, action) VALUES (1, '2023-04-18 00:00:00', 'created account');`).run();
 
     } catch (error) {
         console.log(error);
     }
-}
-else {
-    console.log('Interactions info table exists.');
 }
 
 const checkouts_db = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='checkouts';`);
@@ -80,16 +76,14 @@ if (checkouts === undefined) {
             user_id INTEGER,
             date DATETIME,
             cost INTEGER,
-            FOREIGN KEY (user_id) REFERENCES users(id));`).run();
+            email TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`).run();
 
-        db.prepare(`INSERT INTO checkouts (user_id, date, cost) VALUES (1, '2023-04-18 00:00:00', 100);`).run();
+        db.prepare(`INSERT INTO checkouts (user_id, date, cost, email) VALUES (1, '2023-04-18 00:00:00', 100, 'test@gmail.com');`).run();
 
     } catch (error) {
         console.log(error);
     }
-}
-else {
-    console.log('Checkouts info table exists.');
 }
 
 export default db;

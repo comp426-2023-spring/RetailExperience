@@ -31,3 +31,9 @@
 * finish documentations
 * make video 
 * finalize and submit
+* working on merging everything & dealing with merge conflicts
+
+# May 7th meeting:
+* finish documentations
+* make video 
+* finalize and submit

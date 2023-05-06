@@ -2,55 +2,59 @@
 <html lang="en">
 
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/home-style.css">
 </head>
 
-<div class="card-wrapper">
+<body>
+    <div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header>LOGIN</header>
+            <form name="login_form" action="/api/login" method="post">
+                <input type="text" name="username" placeholder="Enter your username" required>
+                <input type="password" name="password" placeholder="Enter your password" required>
+                <p class="error error--hidden"></p>
+                <input type="submit" class="button" value="Login">
+            </form>
+            <div class="register">
+                <span class="register"> Don't have an account?
+                    <label for="check">Signup!</label>
+                </span>
+            </div>
+        </div>
+        <div class="signup form">
+            <header>Create an Account</header>
+            <form name="signup_form" action="/api/profile" method="post">
 
-    <div class="card">
+                <input type="text" name="fname" placeholder="Enter your first name" required>
 
-        <h1 class="center">Create an Account</h1>
 
-        <form name="signup_form" action="/api/profile" method="post">
+                <input type="text" name="lname" placeholder="Enter your last name" required>
 
-            <label for="username">Username</label>
-            <input type="text" name="username" class="field" required>
 
-            <label for="fname">First Name</label>
-            <input type="text" name="fname" class="field" required>
+                <input type="text" name="username" placeholder="Create a username" required>
 
-            <label for="lname">Last Name</label>
-            <input type="text" name="lname" class="field" required>
 
-            <label for="password">Password</label>
-            <input type="password" name="password" class="field" required>
+                <input type="password" name="password" placeholder="Create a password" required>
 
-            <p class="error error--hidden"></p>
+                <p class="error error--hidden"></p>
 
-            <input type="submit" value="Sign Up" class="btn">
+                <input type="submit" class="button" value="Sign Up">
+            </form>
 
-        </form>
-
+            <div class="register">
+                <span class="register"> Already have an account?
+                    <label for="check">Login</label>
+                </span>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
 
-        <h1 class="center">Log In</h1>
-
-        <form name="login_form" action="/api/login" method="post"> 
-
-            <label for="username">Username</label>
-            <input type="text" name="username" class="field" required>
-
-            <label for="password">Password</label>
-            <input type="password" name="password" class="field" required>
-
-            <input type="submit" value="Log In" class="btn">
-
-        </form>
-
-    </div>
-
-</div>
+</body>
 
 </html>
