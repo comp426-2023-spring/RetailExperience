@@ -16,7 +16,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var port = 5005
+var port = 3000;
 
 app.get('/', (req, res, next) => {
     if (req.session !== null && req.session.loggedin) {
@@ -113,6 +113,19 @@ app.get('/api/account/', (req, res, next) => {
         res.render('account', 
             {"username": user.username, "fname": user.fname, "lname": user.lname}
         );
+    } else {
+        res.status(200).render('home');
+    }
+    res.end();
+});
+
+
+// View products endpoint
+app.get('/api/products/', (req, res, next) => {
+    if (req.session.loggedin) {
+        let sql = `SELECT * FROM products;`;
+        let products = db.prepare(sql).all();
+        res.render('products', { "products": products, "cart": req.session.cart });
     } else {
         res.status(200).render('home');
     }
@@ -255,9 +268,7 @@ app.post('/api/products/buy/:id', (req, res, next) => {
         if (req.session.cart.length < 1) {
             req.session.cart.push({ id: req.body.id, name: req.body.name, quantity: parseInt(req.body.quantity), price: req.body.price });
         } else {
-
             //increase quantity if the item is already present
-            console.log(req.session.cart);
 
             let result = req.session.cart.find((e) => { return e.name === req.body.name });
 
@@ -266,7 +277,6 @@ app.post('/api/products/buy/:id', (req, res, next) => {
             } else { result.quantity += 1; }
         }
 
-        console.log(`Added ${req.body.quantity} of product ${req.params.id} to cart.`)
         res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
         res.end();
     }
@@ -288,7 +298,6 @@ app.post('/api/products/remove/:id', (req, res, next) => {
             }
         }
 
-        console.log(`Removed ${req.body.quantity} of product ${req.params.id} to cart.`)
         res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
         res.end();
     }
@@ -321,8 +330,6 @@ app.post('/api/confirm_purchase', (req, res, next) => {
         let purchaseQuantity = (req.session.cart[i]['quantity']);
         let oldQuantity = (req.session.available_products[i]['quantity']);
         let newQuantity = oldQuantity - purchaseQuantity
-        console.log(newQuantity);
-
 
         let decrQ = `UPDATE products SET quantity = ${newQuantity} WHERE id='${itemId}';`;
         db.prepare(decrQ).run();

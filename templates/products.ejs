@@ -15,24 +15,14 @@
 
 <body onload="showMessage()">
     <button type="submit" class="cart-image-container" onclick="showCart()">
-        <img src="/img/cart.png" class="cart-image">
+        <i style="color: aliceblue; margin-top: 40%;" class="fa fa-shopping-cart"></i>
     </button>
 
     <header class="display-6 p-4">
         <div class="container">
             <div class="row justify-content-between align-items-center">
                 <div class="col-md-6 text-md-start mx-auto">
-                    Products
-                </div>
-
-                <div class="col-sm-6 text-md-start mx-auto">
-
-                    <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/account'">Account
-                    </button>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/logout'">Logout
-                    </button>
-
+                    <h2 style="width: 100%; text-align: center;">Products</h2>
                 </div>
             </div>
         </div>
@@ -114,6 +104,15 @@
                                                 </div>
                                                 <% } %>
 
+            <div class="col-sm-6 text-md-start mx-auto">
+            
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/account'">Account
+                </button>
+            
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/logout'">Logout
+                </button>
+            
+            </div>
     </div>
 
     <!-- Main element displaying products -->

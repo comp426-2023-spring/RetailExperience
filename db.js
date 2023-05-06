@@ -35,10 +35,10 @@ if (products === undefined) {
             price INTEGER,
             quantity INTEGER);`).run();
 
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hat', 100, 10);`).run();
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Shirt', 20, 5);`).run();
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hoodie', 50, 10);`).run();
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Pant', 60, 5);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hat', 20, 25);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Shirt', 20, 50);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Hoodie', 50, 40);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('Socks', 10, 15);`).run();
 
     } catch (error) {
         console.log(error);
