@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1, shrink-to-fit=no">
+    <title>Home</title>
+    <!--Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--Font Awesome-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/products-styles.css">
+</head>
+
+<body onload="showMessage()">
+    
+    <button type="submit" class="cart-image-container" onclick="showCart()">
+        <i style="color: aliceblue; margin-top: 40%;" class="fa fa-shopping-cart"></i>
+    </button>
+
+    <header class="display-6 p-4">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-md-6 text-md-start mx-auto">
+                    <h2 style="width: 100%; text-align: center;">Products</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart element -->
+    <div class="cart-container" id="cart-container">
+        <%let count=0;%>
+
+            <% if (cart.length==0) { %>
+                <div class="no-items">
+                    No items in cart
+                </div>
+
+                <% } else { %>
+
+                    <%let total=0;%>
+                        <% for (let i=0; i < cart.length; i++) { %>
+                            <% if (cart[i] !==undefined) { %>
+                                <%total +=(parseInt(cart[i]['quantity']) * parseInt(cart[i]['price'])) ;%>
+                                    <%count +=parseInt(cart[i]['quantity'])%>
+                                        <div class="cart-item-container">
+                                            <div class="cart-item-image-container">
+                                                <% var temp="/img/" + cart[i]['name'] + ".jpg" ; %>
+                                                    <img class="cart-item-image" src="<%= temp %>"
+                                                        alt="<%= products[i]['name'] %>">
+                                            </div>
+                                            <div class="cart-item">
+                                                <h1 class="cart-item-h">
+                                                    <%=cart[i]['name']%>
+                                                </h1>
+                                                <h3 class="cart-item-h">$<%=cart[i]['price']%>
+                                                </h3>
+                                            </div>
+                                            <div class="cart-item-count-container">
+
+                                                <form name="item_form" action="/api/products/buy/<%=products[i]['id']%>"
+                                                    method="post">
+                                                    <input type="hidden" name="id" value="<%=cart[i]['id']%>">
+                                                    <input type="hidden" name="name" value="<%=cart[i]['name']%>">
+                                                    <input type="hidden" name="quantity"
+                                                        value="<%=cart[i]['quantity']%>">
+                                                    <button type="submit" class="item-quantity-button">
+                                                        <img src="/img/plus.png" class="cart-image">
+                                                    </button>
+                                                </form>
+
+                                                <div>
+                                                    <%=cart[i]['quantity']%>
+                                                </div>
+
+                                                <form name="item_form"
+                                                    action="/api/products/remove/<%=products[i]['id']%>" method="post">
+                                                    <input type="hidden" name="id" value="<%=cart[i]['id']%>">
+                                                    <input type="hidden" name="name" value="<%=cart[i]['name']%>">
+                                                    <input type="hidden" name="quantity"
+                                                        value="<%=cart[i]['quantity']%>">
+                                                    <button type="submit" class="item-quantity-button">
+                                                        <img src="/img/minus.png" class="cart-image">
+                                                    </button>
+                                                </form>
+
+
+
+                                            </div>
+                                        </div>
+                                        <% } %>
+
+                                            <% } %>
+                                                <div class="cart-checkout-box">
+                                                    <h3>Total: $<%=total%>
+                                                    </h3>
+
+                                                    <form class="checkout-button-container" name="item_form" action="/api/checkout/" method="post">
+                                                        <input type="hidden" name="cart" value="<%=cart%>">
+                                                        <input type="hidden" name="total" value="<%=total%>">
+                                                        <input type="submit" class="checkout-button" value="Checkout">
+                                                    </form>
+                                                </div>
+                                                <% } %>
+
+            <div class="cart-nav">
+            
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/account'">Account
+                </button>
+            
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='/api/logout'">Logout
+                </button>
+            
+            </div>
+    </div>
+
+    <!-- Main element displaying products -->
+    <% for (let i=0; i < products.length; i=i + 2) { %>
+        <div class="container">
+            <div class="row">
+                <div class="col-6 pt-4">
+                    <div class="border border-1 border-dark rounded p-2">
+                        <!--update with image of item from backend-->
+                        <% var temp="/img/" + products[i]['name'] + ".jpg" ; %>
+                            <img class="pt-3" src="<%= temp %>" alt="<%= products[i]['name'] %>">
+                            <!--update with name of product from backend-->
+                            <p class="text-center pt-2 fs-4">
+                                <%=products[i]["name"]%>
+                            </p>
+
+                            <form name="cart_form" action="/api/products/buy/<%=products[i]['id']%>" method="post">
+                                <input type="hidden" name="id" value="<%=products[i]['id']%>">
+                                <input type="hidden" name="name" value="<%=products[i]['name']%>">
+                                <input type="hidden" name="price" value="<%=products[i]['price']%>">
+                                <div class="row row-pad">
+                                    <div class="col-7">
+                                        <p class="text-center fs-5">Quantity: </p>
+                                    </div>
+                                    <div class="col-5">
+                                        <input name="quantity" class="text-center pt-2 fs-4" type="number" min="1"
+                                            max="<%= products[i]['quantity']%>" value="1"></input>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-7">
+                                        <!--update with price of product from backend-->
+                                        <p class="text-center fs-5">$<%=products[i]["price"]%>
+                                        </p>
+                                    </div>
+                                    <div class="col-5">
+                                        <!--when clicked adds item to shopping cart table in backend-->
+                                        <button type="submit" class="btn btn-outline-success">Buy</button>
+                                    </div>
+                                </div>
+                            </form>
+                    </div>
+                </div>
+                <% if (i+1 < products.length) { %>
+                    <div class="col-6 pt-4">
+                        <div class="border border-1 border-dark rounded p-2">
+                            <!--update with image of item from backend-->
+                            <% var temp="/img/" + products[i + 1]['name'] + ".jpg" ; %>
+                                <img class="pt-3" src="<%= temp %>" alt="<%= products[i + 1]['name'] %>">
+                                <!--update with name of product from backend-->
+                                <p class="text-center pt-2 fs-4">
+                                    <%=products[i+1]["name"]%>
+                                </p>
+
+                                <form name="cart_form" action="/api/products/buy/<%=products[i+1]['id']%>"
+                                    method="post">
+                                    <input type="hidden" name="id" value="<%=products[i+1]['id']%>">
+                                    <input type="hidden" name="name" value="<%=products[i+1]['name']%>">
+                                    <input type="hidden" name="price" value="<%=products[i+1]['price']%>">
+                                    <div class="row row-pad">
+                                        <div class="col-7">
+                                            <p class="text-center fs-5">Quantity: </p>
+                                        </div>
+                                        <div class="col-5">
+                                            <input name="quantity" class="text-center pt-2 fs-4" type="number" min="1"
+                                                max="<%= products[i+1]['quantity']%>" value="1"></input>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <!--update with price of product from backend-->
+                                            <p class="text-center fs-5">$<%=products[i + 1]["price"]%>
+                                            </p>
+                                        </div>
+                                        <div class="col-5">
+                                            <!--when clicked adds item to shopping cart table in backend-->
+                                            <button type="submit" class="btn btn-outline-success">Buy</button>
+                                        </div>
+                                    </div>
+                                </form>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+        <% } %>
+
+            <!-- Show on purchase complete -->
+            <div class="purchase-message-box <%=purchase%>" id="pm">
+                <div class="message-bar">
+                    <button type="submit" class="ok" onclick="hideMessage()">
+                    </button>
+                </div>
+                <div class="message-text">
+                    <h1>Purchase successful</h1>
+
+                    <%try {
+                        if (trans_id) {}
+                    } catch(e) {
+                        var trans_id = 'undefined';
+                    }
+                    %>
+                    
+                    <h3>Transaction ID: <%=trans_id%></h3>
+                </div>
+            </div>
+
+            <div class="pad"></div>
+
+            <footer class="text-center">
+                Retail Experience
+            </footer>
+
+            <script>
+                function showMessage() {
+                    if (purchase == 'true') {
+                        document.getElementById('pm').style.display = "flex";
+                        alert(purchase);
+                    }
+                    
+                    
+                }
+            </script>
+
+            <script>
+                
+                function hideMessage() {
+                    if (document.getElementById('pm').style.display !== "none") {
+                        document.getElementById('pm').style.display = "none";
+                    }
+                }
+            </script>
+
+            <script>
+                function showCart() {
+                    if (document.getElementById('cart-container').style.display === "inline-block") {
+                        document.getElementById('cart-container').style.display = "none";
+                    }
+                    else { document.getElementById('cart-container').style.display = "inline-block"; }
+                }
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+</body>
+
+</html>
