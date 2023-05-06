@@ -27,6 +27,7 @@ app.get('/', (req, res, next) => {
 })
 
 // Create user endpoint
+
 app.post('/api/profile/', (req, res, next) => {
     let userdata = {
         fname: req.body.fname,
@@ -67,6 +68,7 @@ app.post('/api/profile/', (req, res, next) => {
 
         res.end();
     }
+    res.end()
 });
 
 
@@ -100,8 +102,9 @@ app.post('/api/login/', (req, res, next) => {
         res.render('products', { "products": req.session.available_products, "cart": req.session.cart });
     } else {
         res.status(401).send('Invalid username or password.');
+        
     }
-    res.end();
+    res.end()
 });
 
 
