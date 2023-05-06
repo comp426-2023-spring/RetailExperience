@@ -16,11 +16,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-<<<<<<< Updated upstream
-var port = 3000;
-=======
 var port = 3000
->>>>>>> Stashed changes
 
 app.get('/', (req, res, next) => {
     if (req.session !== null && req.session.loggedin) {
