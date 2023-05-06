@@ -21,7 +21,7 @@ Retail Experience is an application that allows users to browse and purchase pro
 ## Demo Video
 Insert Link Here
 
-## API Enpoints
+## API Endpoints
 Click this link to find out more about the applications enpoints: [API Endpoints](docs/api.md)
 
 <!---
