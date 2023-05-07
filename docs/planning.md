@@ -11,7 +11,7 @@
 * split up tasks to work on individually 
   * products page frontend - Amanda
   * account frontend - Thalia
-  * shopping cart - Coy
+  * shopping cart page (frontend & backend) - Coy
   * create/delete account feature & interactions log - Bharath
 
 # April 23rd meeting:
