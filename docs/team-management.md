@@ -9,3 +9,5 @@ This is how we divided up our team:
   * Bharath
 * Documentation team: people responsible for documenting progress 
   * Amanda & Bharath
+* Demo Lead: someone who makes the demo video 
+  * Bharath
