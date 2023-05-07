@@ -5,6 +5,7 @@
   "description": "Spring 2023 Retail Experience Project",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "node index.js"
   },
   "repository": {
@@ -12,7 +13,7 @@
     "url": "git+https://github.com/comp426-2023-spring/RetailExperience.git"
   },
   "author": "",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/comp426-2023-spring/RetailExperience/issues"
   },
