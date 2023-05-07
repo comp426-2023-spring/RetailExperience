@@ -37,5 +37,5 @@
 
 # May 7th meeting:
 * finish documentations
-* make demo video 
+* make demo video - Bharath
 * finalize and submit
