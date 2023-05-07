@@ -39,3 +39,4 @@
 * finish documentations
 * make demo video - Bharath
 * finalize and submit
+* goodbyes and thank yous for a great group effort and project
