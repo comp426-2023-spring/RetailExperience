@@ -15,6 +15,9 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('js'));
+
+var port = 3000
 
 var port = 3000
 
@@ -27,6 +30,7 @@ app.get('/', (req, res, next) => {
 })
 
 // Create user endpoint
+
 app.post('/api/profile/', (req, res, next) => {
     let userdata = {
         fname: req.body.fname,
