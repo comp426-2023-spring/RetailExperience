@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+
 <div class="card-wrapper">
 
     <div class="card">
 
         <h1 class="center">Create an Account</h1>
 
-        <form name="signup_form" action="api/profile" method="post">
+        <form name="signup_form" action="/api/profile" method="post">
 
             <label for="username">Username</label>
             <input type="text" name="username" class="field" required>

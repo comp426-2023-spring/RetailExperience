@@ -37,7 +37,7 @@ if (products === undefined) {
             price INTEGER,
             quantity INTEGER);`).run();
 
-        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('product1', 100, 10);`).run();
+        db.prepare(`INSERT INTO products (name, price, quantity) VALUES ('product1', 100, 10), ('product2', 200, 5), ('product1', 30, 0);`).run();
 
     } catch (error) {
         console.log(error);

@@ -6,6 +6,10 @@ header {
     color: white;
 }
 
+.body {
+    color: red;
+}
+
 footer {
     position: fixed;
     left: 0;
